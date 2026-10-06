@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Online Book Store</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Times New Roman", Arial, sans-serif;
+        }
+
+        /* =================================================
+           THREE FRAME LAYOUT
+           ================================================= */
+
+        .main {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* TOP FRAME */
+        .top-frame {
+            height: 25%;
+            border: 1px solid black;
+        }
+
+        /* BOTTOM AREA */
+        .bottom {
+            height: 75%;
+            display: flex;
+        }
+
+        /* LEFT FRAME */
+        .left-frame {
+            width: 20%;
+            border-left: 1px solid black;
+            border-right: 1px solid black;
+            border-bottom: 1px solid black;
+        }
+
+        /* RIGHT FRAME */
+        .right-frame {
+            width: 80%;
+            border-right: 1px solid black;
+            border-bottom: 1px solid black;
+            overflow: auto;
+        }
+
+
+        /* =================================================
+           TOP FRAME
+           ================================================= */
+
+        .top-table {
+            width: 100%;
+            height: 100%;
+            border-collapse: collapse;
+        }
+
+        .top-table td {
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        .logo {
+            width: 20%;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .site-name {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .menu {
+            height: 35px;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: black;
+            font-size: 17px;
+        }
+
+        .menu a:hover {
+            background-color: yellow;
+        }
+
+
+        /* =================================================
+           LEFT FRAME
+           ================================================= */
+
+        .left-frame a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: black;
+            font-size: 18px;
+        }
+
+        .left-frame a:hover {
+            background-color: yellow;
+        }
+
+
+        /* =================================================
+           RIGHT PAGE
+           ================================================= */
+
+        .page {
+            padding: 20px;
+        }
+
+        .page h2 {
+            text-align: center;
+        }
+
+
+        /* =================================================
+           LOGIN
+           ================================================= */
+
+        .login-table {
+            margin: 50px auto;
+        }
+
+        .login-table td {
+            padding: 8px;
+            font-size: 18px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 180px;
+            height: 28px;
+        }
+
+        input[type="submit"],
+        input[type="reset"] {
+            padding: 8px 20px;
+            font-size: 16px;
+            margin: 5px;
+        }
+
+
+        /* =================================================
+           REGISTRATION
+           ================================================= */
+
+        .registration-table {
+            margin: auto;
+        }
+
+        .registration-table td {
+            padding: 6px;
+        }
+
+        .registration-table input[type="text"],
+        .registration-table input[type="password"] {
+            width: 220px;
+        }
+
+        select {
+            padding: 5px;
+        }
+
+        textarea {
+            width: 220px;
+            height: 70px;
+        }
+
+
+        /* =================================================
+           CATALOGUE
+           ================================================= */
+
+        .catalogue {
+            width: 95%;
+            margin: auto;
+            border-collapse: collapse;
+        }
+
+        .catalogue th,
+        .catalogue td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+
+        .catalogue th {
+            text-align: center;
+        }
+
+        .book-cover {
+            width: 100px;
+            height: 125px;
+            margin: auto;
+            border: 1px solid black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .xml {
+            background-color: #f5d27a;
+        }
+
+        .ai {
+            background-color: #7fc99b;
+        }
+
+        .java {
+            background-color: #6fa6c9;
+        }
+
+        .html {
+            background-color: #dddddd;
+        }
+
+        .cart-button {
+            background-color: #eab53d;
+            border: 1px solid #555;
+            border-radius: 10px;
+            padding: 5px 15px;
+            cursor: pointer;
+        }
+
+
+        /* =================================================
+           CART
+           ================================================= */
+
+        .cart-table {
+            width: 90%;
+            margin: 30px auto;
+            border-collapse: collapse;
+        }
+
+        .cart-table th,
+        .cart-table td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        .total {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+
+        /* =================================================
+           DEPARTMENT CATALOGUE
+           ================================================= */
+
+        .department-table {
+            width: 90%;
+            margin: auto;
+            border-collapse: collapse;
+        }
+
+        .department-table th,
+        .department-table td {
+            border: 1px solid black;
+            padding: 10px;
+        }
+
+        .department-table th {
+            background-color: #eeeeee;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="main">
+
+
+    <!-- =================================================
+         TOP FRAME
+         ================================================= -->
+
+    <div class="top-frame">
+
+        <table class="top-table">
+
+            <tr>
+
+                <td class="logo">
+                    LOGO
+                </td>
+
+                <td colspan="4" class="site-name">
+                    ONLINE BOOK STORE
+                </td>
+
+            </tr>
+
+
+            <tr class="menu">
+
+                <td>
+                    <a href="#" onclick="showPage('home')">
+                        Home
+                    </a>
+                </td>
+
+                <td>
+                    <a href="#" onclick="showPage('login')">
+                        Login
+                    </a>
+                </td>
+
+                <td>
+                    <a href="#" onclick="showPage('registration')">
+                        Registration
+                    </a>
+                </td>
+
+                <td>
+                    <a href="#" onclick="showPage('catalogue')">
+                        Catalogue
+                    </a>
+                </td>
+
+                <td>
+                    <a href="#" onclick="showPage('cart')">
+                        Cart
+                    </a>
+                </td>
+
+            </tr>
+
+        </table>
+
+    </div>
+
+
+
+    <!-- =================================================
+         LEFT + RIGHT FRAMES
+         ================================================= -->
+
+    <div class="bottom">
+
+
+        <!-- ================= LEFT FRAME ================= -->
+
+        <div class="left-frame">
+
+            <a href="#" onclick="showPage('cse')">
+                CSE
+            </a>
+
+            <a href="#" onclick="showPage('ece')">
+                ECE
+            </a>
+
+            <a href="#" onclick="showPage('eee')">
+                EEE
+            </a>
+
+            <a href="#" onclick="showPage('civil')">
+                CIVIL
+            </a>
+
+        </div>
+
+
+
+        <!-- ================= RIGHT FRAME ================= -->
+
+        <div class="right-frame" id="rightFrame">
+
+            <!-- HOME PAGE WILL BE LOADED HERE -->
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+
+/* =====================================================
+   HOME PAGE
+   ===================================================== */
+
+function homePage() {
+
+    return `
+
+    <div class="page">
+
+        <h2>Welcome to Online Book Store</h2>
+
+        <br>
+
+        <center>
+
+            <h3>Description of the Web Site</h3>
+
+            <p>
+                Welcome to our Online Book Store.
+            </p>
+
+            <p>
+                This website provides various technical
+                books for engineering students.
+            </p>
+
+            <p>
+                Students can browse books, view book details,
+                register, login and add books to the shopping cart.
+            </p>
+
+            <p>
+                Select a department from the left side
+                to view the respective book catalogue.
+            </p>
+
+        </center>
+
+    </div>
+
+    `;
+
+}
+
+
+
+/* =====================================================
+   LOGIN PAGE
+   ===================================================== */
+
+function loginPage() {
+
+    return `
+
+    <div class="page">
+
+        <h2>Login</h2>
+
+        <form>
+
+            <table class="login-table">
+
+                <tr>
+
+                    <td>
+                        Login:
+                    </td>
+
+                    <td>
+                        <input type="text" name="login">
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Password:
+                    </td>
+
+                    <td>
+                        <input type="password" name="password">
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td></td>
+
+                    <td>
+
+                        <input type="submit"
+                               value="Submit">
+
+                        <input type="reset"
+                               value="Reset">
+
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </form>
+
+    </div>
+
+    `;
+
+}
+
+
+
+/* =====================================================
+   REGISTRATION PAGE
+   ===================================================== */
+
+function registrationPage() {
+
+    return `
+
+    <div class="page">
+
+        <h2>Registration Form</h2>
+
+        <form>
+
+        <table class="registration-table">
+
+
+            <!-- NAME -->
+
+            <tr>
+
+                <td>
+                    Name:
+                </td>
+
+                <td>
+                    <input type="text" name="name">
+                </td>
+
+            </tr>
+
+
+            <!-- PASSWORD -->
+
+            <tr>
+
+                <td>
+                    Password:
+                </td>
+
+                <td>
+                    <input type="password"
+                           name="password">
+                </td>
+
+            </tr>
+
+
+            <!-- EMAIL -->
+
+            <tr>
+
+                <td>
+                    E-mail ID:
+                </td>
+
+                <td>
+                    <input type="text"
+                           name="email">
+                </td>
+
+            </tr>
+
+
+            <!-- PHONE -->
+
+            <tr>
+
+                <td>
+                    Phone Number:
+                </td>
+
+                <td>
+                    <input type="text"
+                           name="phone">
+                </td>
+
+            </tr>
+
+
+            <!-- SEX -->
+
+            <tr>
+
+                <td>
+                    Sex:
+                </td>
+
+                <td>
+
+                    <input type="radio"
+                           name="sex"
+                           value="male">
+
+                    Male
+
+
+                    <input type="radio"
+                           name="sex"
+                           value="female">
+
+                    Female
+
+                </td>
+
+            </tr>
+
+
+            <!-- DATE OF BIRTH -->
+
+            <tr>
+
+                <td>
+                    Date of Birth:
+                </td>
+
+                <td>
+
+                    <select>
+
+                        <option>Day</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                        <option>10</option>
+                        <option>11</option>
+                        <option>12</option>
+                        <option>13</option>
+                        <option>14</option>
+                        <option>15</option>
+                        <option>16</option>
+                        <option>17</option>
+                        <option>18</option>
+                        <option>19</option>
+                        <option>20</option>
+                        <option>21</option>
+                        <option>22</option>
+                        <option>23</option>
+                        <option>24</option>
+                        <option>25</option>
+                        <option>26</option>
+                        <option>27</option>
+                        <option>28</option>
+                        <option>29</option>
+                        <option>30</option>
+                        <option>31</option>
+
+                    </select>
+
+
+                    <select>
+
+                        <option>Month</option>
+                        <option>January</option>
+                        <option>February</option>
+                        <option>March</option>
+                        <option>April</option>
+                        <option>May</option>
+                        <option>June</option>
+                        <option>July</option>
+                        <option>August</option>
+                        <option>September</option>
+                        <option>October</option>
+                        <option>November</option>
+                        <option>December</option>
+
+                    </select>
+
+
+                    <select>
+
+                        <option>Year</option>
+                        <option>2000</option>
+                        <option>2001</option>
+                        <option>2002</option>
+                        <option>2003</option>
+                        <option>2004</option>
+                        <option>2005</option>
+                        <option>2006</option>
+                        <option>2007</option>
+                        <option>2008</option>
+                        <option>2009</option>
+                        <option>2010</option>
+                        <option>2011</option>
+                        <option>2012</option>
+
+                    </select>
+
+                </td>
+
+            </tr>
+
+
+            <!-- LANGUAGES -->
+
+            <tr>
+
+                <td>
+                    Languages Known:
+                </td>
+
+                <td>
+
+                    <input type="checkbox"
+                           name="language">
+                    English
+
+                    <br>
+
+                    <input type="checkbox"
+                           name="language">
+                    Telugu
+
+                    <br>
+
+                    <input type="checkbox"
+                           name="language">
+                    Hindi
+
+                    <br>
+
+                    <input type="checkbox"
+                           name="language">
+                    Tamil
+
+                </td>
+
+            </tr>
+
+
+            <!-- ADDRESS -->
+
+            <tr>
+
+                <td>
+                    Address:
+                </td>
+
+                <td>
+
+                    <textarea
+                        name="address">
+                    </textarea>
+
+                </td>
+
+            </tr>
+
+
+            <!-- BUTTONS -->
+
+            <tr>
+
+                <td colspan="2"
+                    align="center">
+
+                    <input type="submit"
+                           value="Submit">
+
+                    <input type="reset"
+                           value="Reset">
+
+                </td>
+
+            </tr>
+
+
+        </table>
+
+        </form>
+
+    </div>
+
+    `;
+
+}
+
+
+
+/* =====================================================
+   COMPLETE BOOK CATALOGUE
+   ===================================================== */
+
+function cataloguePage() {
+
+    return `
+
+    <div class="page">
+
+        <h2>Book Catalogue</h2>
+
+        <table class="catalogue">
+
+            <tr>
+
+                <th>
+                    Book Cover
+                </th>
+
+                <th>
+                    Book Details
+                </th>
+
+                <th>
+                    Price
+                </th>
+
+                <th>
+                    Add to Cart
+                </th>
+
+            </tr>
+
+
+            <!-- XML BOOK -->
+
+            <tr>
+
+                <td>
+
+                    <div class="book-cover xml">
+
+                        XML<br>
+                        BIBLE
+
+                    </div>
+
+                </td>
+
+
+                <td>
+
+                    <b>Book:</b> XML Bible<br>
+
+                    <b>Author:</b> Winston<br>
+
+                    <b>Publication:</b> Wiley
+
+                </td>
+
+
+                <td>
+                    $40.5
+                </td>
+
+
+                <td>
+
+                    <button class="cart-button"
+                            onclick="addCart('XML Bible')">
+
+                        🛒 Add to cart
+
+                    </button>
+
+                </td>
+
+            </tr>
+
+
+
+            <!-- AI BOOK -->
+
+            <tr>
+
+                <td>
+
+                    <div class="book-cover ai">
+
+                        ARTIFICIAL<br>
+                        INTELLIGENCE
+
+                    </div>
+
+                </td>
+
+
+                <td>
+
+                    <b>Book:</b>
+                    Artificial Intelligence<br>
+
+                    <b>Author:</b>
+                    S. Russell<br>
+
+                    <b>Publication:</b>
+                    Prentice Hall
+
+                </td>
+
+
+                <td>
+                    $63
+                </td>
+
+
+                <td>
+
+                    <button class="cart-button"
+                            onclick="addCart('AI')">
+
+                        🛒 Add to cart
+
+                    </button>
+
+                </td>
+
+            </tr>
+
+
+
+            <!-- JAVA BOOK -->
+
+            <tr>
+
+                <td>
+
+                    <div class="book-cover java">
+
+                        JAVA 2
+
+                    </div>
+
+                </td>
+
+
+                <td>
+
+                    <b>Book:</b> Java 2<br>
+
+                    <b>Author:</b> Watson<br>
+
+                    <b>Publication:</b>
+                    BPB Publications
+
+                </td>
+
+
+                <td>
+                    $35.5
+                </td>
+
+
+                <td>
+
+                    <button class="cart-button"
+                            onclick="addCart('Java 2')">
+
+                        🛒 Add to cart
+
+                    </button>
+
+                </td>
+
+            </tr>
+
+
+
+            <!-- HTML BOOK -->
+
+            <tr>
+
+                <td>
+
+                    <div class="book-cover html">
+
+                        HTML<br>
+                        IN 24 HOURS
+
+                    </div>
+
+                </td>
+
+
+                <td>
+
+                    <b>Book:</b>
+                    HTML in 24 Hours<br>
+
+                    <b>Author:</b>
+                    Sam Peter<br>
+
+                 
