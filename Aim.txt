@@ -1,3 +1,73 @@
-c) Create links on the words e.g. Wi-Fi and LAN to link them to Wikipedia pages.
-d) Insert an image and create a link such that clicking on image takes user to other page.
-e) Change the background color of the page; At the bottom create a link to take user to the top of the page
+5. Aim:
+HTML
+a) Design the following static web pages required for an online book store web site.
+1) HOME PAGE: The static home page must contain three frames.
+Top frame: Logo and the college name and links to Home page, Login page, Registration
+page, Catalogue page and Cart page (the description of these pages will be given below).
+Left frame: At least four links for navigation, which will display the catalogue of respective
+links. For e.g.: When you click the link “CSE” the catalogue for CSE Books should be
+displayed in the Right frame.
+Right frame: The pages to the links in the left frame must be loaded here. Initially this page
+contains description of the web site
+
+
+Procedure
+1. Create an HTML file named index.html
+2. Create the main webpage layout using HTML and CSS. Divide the webpage into three sections:
+Top Frame – contains the logo, website name, and navigation links.
+Left Frame – contains links for CSE, ECE, EEE, and CIVIL.
+Right Frame – displays the selected page or catalogue.
+3. Design the Top Frame with a table containing:
+Logo
+Online Book Store / College name
+Home
+Login
+Registration
+Catalogue
+Cart
+4. Design the Left Frame with four navigation links:
+CSE
+ECE
+EEE
+CIVIL
+5. Create the Home Page and display a description of the Online Book Store initially in the right frame.
+6. Create the Login Page using HTML form controls:
+Login text field
+Password field
+Submit button
+Reset button
+7. Create the Registration Page containing:
+Name text field
+Password field
+E-mail ID
+Phone number
+Male/Female radio buttons
+Day, Month and Year selection boxes
+English, Telugu, Hindi and Tamil checkboxes
+Address textarea
+Submit and Reset buttons
+8. Create the Catalogue Page using an HTML table. Display:
+Book cover
+Book name
+Author name
+Publisher
+Price
+Add to Cart button
+9. Create the Cart Page containing:
+Book name
+Price
+Quantity
+Amount
+Total amount
+10. Create separate department catalogue functions for:
+CSE books
+ECE books
+EEE books
+CIVIL books
+11. Use JavaScript functions to display the required page in the right frame when the user clicks a navigation link.
+12. Use the showPage() function to identify which link was clicked and load the corresponding page into the right-frame area.
+13. Use the addCart() function to display a message when the user clicks the Add to Cart button.
+14. Load the Home Page initially when the website is opened.
+15. Save the program as:
+index.html
+16. Open index.html in a web browser and test all the navigation links.
