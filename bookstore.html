@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Online Book Store</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:"Times New Roman",Arial,sans-serif}
+.main{width:100%;height:100vh;display:flex;flex-direction:column}
+.top-frame{flex:0 0 auto;min-height:120px;max-height:25%;border:1px solid #000}
+.bottom{flex:1;display:flex;min-height:0}
+.left-frame{width:20%;min-width:90px;border:1px solid #000;border-top:0}
+.right-frame{flex:1;border:1px solid #000;border-top:0;border-left:0;overflow:auto}
+.top-table{width:100%;height:100%;border-collapse:collapse}
+.top-table td{border:1px solid #000;text-align:center;padding:0}
+.logo{width:20%;font-size:20px;font-weight:bold}
+.site-name{font-size:24px;font-weight:bold;padding:10px}
+.menu td{height:40px}
+.menu a{display:block;width:100%;height:100%;line-height:40px;text-decoration:none;color:#000;font-size:17px}
+.menu a:hover,.left-frame a:hover,.menu a.active,.left-frame a.active{background:yellow}
+.left-frame a{display:block;padding:8px 12px;text-decoration:none;color:#000;font-size:18px}
+.page{padding:20px}
+.page h2{text-align:center}
+.login-table,.registration-table{margin:30px auto}
+.login-table td,.registration-table td{padding:8px;vertical-align:top}
+input[type=text],input[type=password],input[type=email],input[type=tel]{width:220px;height:28px}
+input[type=submit],input[type=reset]{padding:8px 20px;font-size:16px;margin:5px}
+textarea{width:220px;height:70px}
+.err{color:#b00020;font-size:14px;text-align:center;min-height:20px}
+.table{width:95%;margin:auto;border-collapse:collapse}
+.table th,.table td{border:1px solid #000;padding:8px}
+.table th{background:#eee;text-align:center}
+.cover{width:100px;height:125px;margin:auto;border:1px solid #000;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:bold;font-size:15px}
+.c-xml{background:#f5d27a}.c-ai{background:#7fc99b}.c-java{background:#6fa6c9}.c-html{background:#ddd}
+.btn{background:#eab53d;border:1px solid #555;border-radius:10px;padding:5px 15px;cursor:pointer}
+.qty{width:28px;height:28px;cursor:pointer}
+.total{font-weight:bold;font-size:18px}
+.empty{text-align:center;padding:30px}
+.badge{background:#c00;color:#fff;border-radius:10px;padding:0 6px;font-size:12px}
+@media(max-width:600px){
+ .bottom{flex-direction:column}
+ .left-frame{width:100%;display:flex;border-width:0 1px 1px}
+ .left-frame a{flex:1;text-align:center;padding:8px 4px;font-size:16px}
+ .menu a{font-size:13px}
+ .site-name{font-size:18px}
+ .logo{font-size:15px}
+ .table th,.table td{padding:5px;font-size:14px}
+ .cover{width:70px;height:90px;font-size:11px}
+}
+</style>
+</head>
+<body>
+<div class="main">
+ <div class="top-frame">
+  <table class="top-table">
+   <tr><td class="logo">LOGO</td><td colspan="4" class="site-name">ONLINE BOOK STORE</td></tr>
+   <tr class="menu">
+    <td><a href="#" data-page="home">Home</a></td>
+    <td><a href="#" data-page="login">Login</a></td>
+    <td><a href="#" data-page="registration">Registration</a></td>
+    <td><a href="#" data-page="catalogue">Catalogue</a></td>
+    <td><a href="#" data-page="cart">Cart <span class="badge" id="badge" hidden>0</span></a></td>
+   </tr>
+  </table>
+ </div>
+ <div class="bottom">
+  <div class="left-frame">
+   <a href="#" data-page="cse">CSE</a>
+   <a href="#" data-page="ece">ECE</a>
+   <a href="#" data-page="eee">EEE</a>
+   <a href="#" data-page="civil">CIVIL</a>
+  </div>
+  <div class="right-frame" id="rightFrame"></div>
+ </div>
+</div>
+
+<script>
+/* ---------- DATA ---------- */
+const BOOKS = [
+ {id:"xml", title:"XML Bible", author:"Winston", pub:"Wiley", price:40.5, cls:"c-xml", cover:"XML<br>BIBLE"},
+ {id:"ai", title:"Artificial Intelligence", author:"S. Russell", pub:"Prentice Hall", price:63, cls:"c-ai", cover:"ARTIFICIAL<br>INTELLIGENCE"},
+ {id:"java", title:"Java 2", author:"Watson", pub:"BPB Publications", price:35.5, cls:"c-java", cover:"JAVA 2"},
+ {id:"html", title:"HTML in 24 Hours", author:"Sam Peter", pub:"Sam Publication", price:50, cls:"c-html", cover:"HTML<br>IN 24 HOURS"}
+];
+
+const DEPTS = {
+ cse:{title:"CSE BOOKS", books:[["Web Technologies","Deitel","Prentice Hall",50],["Java Programming","Herbert Schildt","McGraw Hill",45],["Database Systems","Korth","McGraw Hill",55]]},
+ ece:{title:"ECE BOOKS", books:[["Digital Electronics","Morris Mano","McGraw Hill",45],["Electronic Devices","Boylestad","Pearson",50],["Signals and Systems","Oppenheim","Prentice Hall",55]]},
+ eee:{title:"EEE BOOKS", books:[["Electrical Machines","P.S. Bimbhra","Khanna Publishers",45],["Power Systems","C.L. Wadhwa","New Age",50],["Control Systems","Nagrath","New Age",55]]},
+ civil:{title:"CIVIL BOOKS", books:[["Engineering Mechanics","R.K. Bansal","Laxmi Publications",40],["Structural Engineering","R.C. Hibbeler","Pearson",55],["Fluid Mechanics","R.K. Rajput","S. Chand",50]]}
+};
+
+/* cart: title -> {price, qty} */
+const cart = {};
+const money = n => "$" + (Math.round(n * 100) / 100).toString();
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* ---------- PAGES ---------- */
+function homePage() {
+ return `<div class="page"><h2>Welcome to Online Book Store</h2>
+ <div style="text-align:center"><h3>Description of the Web Site</h3>
+ <p>Welcome to our Online Book Store.</p>
+ <p>This website provides various technical books for engineering students.</p>
+ <p>Students can browse books, view book details, register, login and add books to the shopping cart.</p>
+ <p>Select a department from the left side to view the respective book catalogue.</p></div></div>`;
+}
+
+function loginPage() {
+ return `<div class="page"><h2>Login</h2>
+ <form id="loginForm" novalidate>
+  <table class="login-table">
+   <tr><td><label for="lg">Login:</label></td><td><input type="text" id="lg" name="login" autocomplete="username"></td></tr>
+   <tr><td><label for="pw">Password:</label></td><td><input type="password" id="pw" name="password" autocomplete="current-password"></td></tr>
+   <tr><td></td><td><input type="submit" value="Submit"><input type="reset" value="Reset"></td></tr>
+  </table>
+  <div class="err" id="err"></div>
+ </form></div>`;
+}
+
+function registrationPage() {
+ const opts = (label, list) => `<option value="">${label}</option>` + list.map(v => `<option>${v}</option>`).join("");
+ const days = Array.from({length:31}, (_, i) => i + 1);
+ const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+ const thisYear = new Date().getFullYear();
+ const years = Array.from({length:thisYear - 1950 + 1}, (_, i) => thisYear - i);
+ const langs = ["English","Telugu","Hindi","Tamil"].map(l =>
+  `<label><input type="checkbox" name="language" value="${l}"> ${l}</label><br>`).join("");
+ return `<div class="page"><h2>Registration Form</h2>
+ <form id="regForm" novalidate>
+  <table class="registration-table">
+   <tr><td><label for="nm">Name:</label></td><td><input type="text" id="nm" name="name"></td></tr>
+   <tr><td><label for="rpw">Password:</label></td><td><input type="password" id="rpw" name="password" autocomplete="new-password"></td></tr>
+   <tr><td><label for="em">E-mail ID:</label></td><td><input type="email" id="em" name="email"></td></tr>
+   <tr><td><label for="ph">Phone Number:</label></td><td><input type="tel" id="ph" name="phone"></td></tr>
+   <tr><td>Sex:</td><td><label><input type="radio" name="sex" value="male"> Male</label>
+     <label><input type="radio" name="sex" value="female"> Female</label></td></tr>
+   <tr><td>Date of Birth:</td><td>
+     <select name="day">${opts("Day", days)}</select>
+     <select name="month">${opts("Month", months)}</select>
+     <select name="year">${opts("Year", years)}</select></td></tr>
+   <tr><td>Languages Known:</td><td>${langs}</td></tr>
+   <tr><td><label for="ad">Address:</label></td><td><textarea id="ad" name="address"></textarea></td></tr>
+   <tr><td colspan="2" align="center"><input type="submit" value="Submit"><input type="reset" value="Reset"></td></tr>
+  </table>
+  <div class="err" id="err"></div>
+ </form></div>`;
+}
+
+function cataloguePage() {
+ const rows = BOOKS.map(b => `<tr>
+  <td><div class="cover ${b.cls}">${b.cover}</div></td>
+  <td><b>Book:</b> ${b.title}<br><b>Author:</b> ${b.author}<br><b>Publication:</b> ${b.pub}</td>
+  <td>${money(b.price)}</td>
+  <td><button class="btn" data-add="${esc(b.title)}" data-price="${b.price}">🛒 Add to cart</button></td></tr>`).join("");
+ return `<div class="page"><h2>Book Catalogue</h2><div style="overflow-x:auto">
+ <table class="table"><tr><th>Book Cover</th><th>Book Details</th><th>Price</th><th>Add to Cart</th></tr>${rows}</table></div></div>`;
+}
+
+function departmentPage(key) {
+ const d = DEPTS[key];
+ const rows = d.books.map(b => `<tr><td>${b[0]}</td><td>${b[1]}</td><td>${b[2]}</td><td>${money(b[3])}</td>
+  <td><button class="btn" data-add="${esc(b[0])}" data-price="${b[3]}">🛒 Add</button></td></tr>`).join("");
+ return `<div class="page"><h2>${d.title}</h2><div style="overflow-x:auto">
+ <table class="table"><tr><th>Book Name</th><th>Author</th><th>Publisher</th><th>Price</th><th>Cart</th></tr>${rows}</table></div></div>`;
+}
+
+function cartPage() {
+ const items = Object.entries(cart);
+ if (!items.length) {
+  return `<div class="page"><h2>Shopping Cart</h2><p class="empty">Your cart is empty. Visit the Catalogue to add books.</p></div>`;
+ }
+ let total = 0;
+ const rows = items.map(([title, it]) => {
+  const amt = it.price * it.qty;
+  total += amt;
+  return `<tr><td>${title}</td><td>${money(it.price)}</td>
+   <td><button class="qty" data-dec="${esc(title)}">−</button> ${it.qty}
+       <button class="qty" data-inc="${esc(title)}">+</button></td>
+   <td>${money(amt)}</td>
+   <td><button class="btn" data-del="${esc(title)}">Remove</button></td></tr>`;
+ }).join("");
+ return `<div class="page"><h2>Shopping Cart</h2><div style="overflow-x:auto">
+ <table class="table"><tr><th>Book Name</th><th>Price</th><th>Quantity</th><th>Amount</th><th></th></tr>${rows}
+ <tr><td colspan="3" class="total">Total Amount</td><td class="total" colspan="2">${money(total)}</td></tr></table></div></div>`;
+}
+
+/* ---------- NAVIGATION ---------- */
+let current = "home";
+function showPage(page) {
+ current = page;
+ let html;
+ if (page === "home") html = homePage();
+ else if (page === "login") html = loginPage();
+ else if (page === "registration") html = registrationPage();
+ else if (page === "catalogue") html = cataloguePage();
+ else if (page === "cart") html = cartPage();
+ else if (DEPTS[page]) html = departmentPage(page);
+ else html = homePage();
+ document.getElementById("rightFrame").innerHTML = html;
+ document.querySelectorAll("[data-page]").forEach(a => a.classList.toggle("active", a.dataset.page === page));
+}
+
+function updateBadge() {
+ const n = Object.values(cart).reduce((s, i) => s + i.qty, 0);
+ const b = document.getElementById("badge");
+ b.textContent = n;
+ b.hidden = n === 0;
+}
+
+/* ---------- EVENTS (delegated) ---------- */
+document.addEventListener("click", e => {
+ const nav = e.target.closest("[data-page]");
+ if (nav) { e.preventDefault(); showPage(nav.dataset.page); return; }
+
+ const t = e.target.closest("button");
+ if (!t) return;
+ if (t.dataset.add) {
+  const k = t.dataset.add;
+  if (cart[k]) cart[k].qty++; else cart[k] = {price: Number(t.dataset.price), qty: 1};
+  updateBadge();
+  alert(k + " has been added to the cart.");
+ } else if (t.dataset.inc) {
+  cart[t.dataset.inc].qty++;
+ } else if (t.dataset.dec) {
+  if (--cart[t.dataset.dec].qty <= 0) delete cart[t.dataset.dec];
+ } else if (t.dataset.del) {
+  delete cart[t.dataset.del];
+ } else return;
+ updateBadge();
+ if (current === "cart") showPage("cart");
+});
+
+document.addEventListener("submit", e => {
+ e.preventDefault();               /* stop the page reloading */
+ const f = e.target, err = f.querySelector("#err");
+ const v = n => (f.elements[n] ? f.elements[n].value.trim() : "");
+ if (f.id === "loginForm") {
+  if (!v("login") || !v("password")) { err.textContent = "Please enter both login and password."; return; }
+  err.style.color = "green"; err.textContent = "Login submitted.";
+ } else if (f.id === "regForm") {
+  if (!v("name") || !v("password")) { err.textContent = "Name and password are required."; return; }
+  if (!/^\S+@\S+\.\S+$/.test(v("email"))) { err.textContent = "Please enter a valid e-mail."; return; }
+  if (v("phone") && !/^\d{10}$/.test(v("phone"))) { err.textContent = "Phone number must be 10 digits."; return; }
+  err.style.color = "green"; err.textContent = "Registration submitted.";
+ }
+});
+
+document.addEventListener("reset", e => {
+ const err = e.target.querySelector("#err");
+ if (err) err.textContent = "";
+});
+
+showPage("home");
+</script>
+</body>
+</html>
